@@ -77,32 +77,3 @@ public class Controller
 	  
 }
 
-
-/*
- * Apagar isso depois	  
-public void moveXYZ()
-{
-	  Random randomGenerator = new Random();
-	  int[] array = new int[3];
-		  for (int i = 0; i < 3; i++)
-		  {
-			  int randomInt = randomGenerator.nextInt(100);
-			  	array[i] = randomInt;
-		  }
-		  setXYZCoords(array[1],array[2], array[3]);
-}
-*/	  
-
-/*
-public void pressButtons(String keyInput)
-{
-	  for (int i = 0; i < keyInput.length(); i++)
-		  for (int j = 0; j < s_maxButtons; j++)
-		  {
-			  if (keyInput.charAt(i) == _keys[j])
-			  {
-				  this.setButton(j, true);
-			  }
-		  }
-	}
-*/  
