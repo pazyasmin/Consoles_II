@@ -53,7 +53,7 @@ public class PlayStation3 extends Console implements IPlayStation3, IGameLoader
 	        return info.toString();
 	    }
 //x------------------x------------------x------------------x------------------x------------------x//
-//Implementação dos métodos da interface do PlayStation 3.
+//ImplementaÃ§Ã£o dos mÃ©todos da interface do PlayStation 3.
 @Override
 public void motionSensing()
 {
@@ -164,7 +164,7 @@ public final void setPSMove(boolean psMove)
  }
  
 //x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação de métodos da interface IGameLoader	  
+//ImplementaÃ§Ã£o de mÃ©todos da interface IGameLoader	  
 //Play from media
 @Override
 public void play(Game game)  
@@ -244,7 +244,7 @@ public void displayGames()
 }
 	 
 //x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação dos métodos da classe abstrata Console.
+//ImplementaÃ§Ã£o dos mÃ©todos da classe abstrata Console.
  @Override
  public void insertController()
  {
@@ -437,17 +437,17 @@ public void displayGames()
  {
 	 if (!this._power)
 	    {
-		 	this.setPower(true);
-		 	System.out.println("\t-PlayStation 3-");    
-		 	System.out.println("Loading PlayStation 3. Please wait..."); 
-		 	System.out.println("Scanning components...");    
-		 	System.out.println(this);
-		    motionSensing();
-	  
-	        menu();
+	 	this.setPower(true);
+	 	System.out.println("\t-PlayStation 3-");    
+	 	System.out.println("Loading PlayStation 3. Please wait..."); 
+	 	System.out.println("Scanning components...");    
+	 	System.out.println(this);
+	    	motionSensing();
+  
+        	menu();
 	    }
 	 	else
-	 		this.setPower(true);
+			this.setPower(true);
  }
 //		  
 }
