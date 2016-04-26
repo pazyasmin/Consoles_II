@@ -1,2 +1,2 @@
 # Consoles_II
-Atividade de Programação 2. 
+Segunda Atividade de Programação 2: Adaptação do código da primeira atividade para Java.
