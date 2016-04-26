@@ -55,7 +55,7 @@ public class Xbox360 extends Console implements IXbox360, IGameLoader
 	}
 
 //x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação de métodos da interface IXbox360
+//ImplementaÃ§Ã£o de mÃ©todos da interface IXbox360
 	 
 @Override
 public void motionSensing()
@@ -167,7 +167,7 @@ public final void setKinect(boolean kinect)
  }
 
 //x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação de métodos da interface IGameLoader	 
+//ImplementaÃ§Ã£o de mÃ©todos da interface IGameLoader	 
 //Play from media
 @Override
 public void play(Game game)  
@@ -246,7 +246,7 @@ public void displayGames()
 
 }
 //x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação dos métodos da classe abstrata Console.
+//ImplementaÃ§Ã£o dos mÃ©todos da classe abstrata Console.
 @Override
 public void insertController()
 {
@@ -441,17 +441,16 @@ public void startScreen()
 {
 	 if (!this._power)
 	 {
-        this.setPower(true);
+		 this.setPower(true);
 	 	System.out.println("\t-XBOX 360-");    
 	 	System.out.println("Loading Xbox 360. Please wait..."); 
 	 	System.out.println("Scanning components...");    
 	 	System.out.println(this);
-	    motionSensing();
-
-        menu();
+	    	motionSensing();
+	        menu();
 	 }
 	 else
-		 this.setPower(true);
+		this.setPower(true);
 }
 //
 }
