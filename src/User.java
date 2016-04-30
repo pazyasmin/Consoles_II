@@ -58,7 +58,7 @@ public class User
         {
             System.out.println("Gamertag must be at least 5 characters long. ");
             System.out.println("Assigning default name...");
-            this._name = "johndoe123";
+            this._name = "360noscope";
         }
         else 
         {

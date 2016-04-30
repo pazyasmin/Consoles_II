@@ -6,15 +6,7 @@ public class Xbox360 extends Console implements IDevice, IXbox360
 	private boolean _kinect;
 	private int [] 	_kinectCoordinates;
 
-<<<<<<< HEAD
 public Xbox360()
-=======
-//x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação de métodos da interface IXbox360
-	 
-@Override
-public void motionSensing()
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
 {
 	super();
 	this._platform = Platforms.XBOX360;
@@ -174,95 +166,9 @@ public final void setKinect(boolean kinect)
 	 return this._kinectCoordinates[2];
  }
 
-<<<<<<< HEAD
-=======
-//x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação de métodos da interface IGameLoader	 
-//Play from media
-@Override
-public void play(Game game)  
-{
-	  if (!game.equals(this.getPlatform()))
-		 System.out.println("Action denied. The game '" + game.getTitle() + "' is not compatible with your system.");
-	  else
-	  {
-	   System.out.println("Loading game from media. Please wait...");
-	   System.out.println("You're now playing "+ game.getTitle() + "!");
-	   System.out.println("Press enter to quit game. ");
-	   Scanner enter = new Scanner(System.in);
-	   enter.nextLine();
-	   enter.close();
-	   System.out.println("Exiting game...");
-	     
-	  }
-}
-    
-//Play from Hard Drive
-@Override
-public void play()
-{
-	if ( this._numControllers == 0 ) 
-		System.out.println("Error. You can't play a game with no controllers.");
-	    else
-	    	if (_numGames == 0 )
-	    		System.out.println("Error. There are currently no games installed on your hard drive.");
-	    	else
-	    	{
-	    		System.out.println("Which of the following would you like to play?");
-	
-		        int i = 1;
-		        for (Game gameList : _games) 
-		        {
-		            System.out.println( i + " - " + gameList.getTitle());
-		            i++;
-		        }
-		        	
-		        System.out.println("\nEnter an option: ");	
-		        Scanner num = new Scanner(System.in);
-		        int option=-1;
-		        while(option<=0 || option > _numGames || !(num.hasNextInt()))
-		        {
-		   		 option = num.nextInt();
-		   		 if(option < 0 || option > _numGames || !(num.hasNextInt()))
-		   			 System.out.println ("Please enter a valid option: ");
-		        }
-		   		
-		        num.close();
-		        System.out.println("Loading game. Please wait...");
-		        System.out.println("You're now playing "+ _games.get(option-1).getTitle() + "!");
-		        System.out.println("Press enter to quit game. ");
-		        Scanner enter = new Scanner(System.in);
-		        enter.nextLine();
-		        System.out.println("Quitting game...");
-		        enter.close();        
-	    }	
-}
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
 
-<<<<<<< HEAD
    
 // Implementa��o dos m�todos da classe abstrata Console.
-=======
-@Override
-public void displayGames()
-{
-	 
-	if (this._numGames == 0)
-		System.out.println ("No games have been found.");
-	else
-	{
-		int i = 1;
-		for (Game game : _games)
-		{
-			System.out.println (i + " - " + game);
-			i++;
-		}
-	}
-
-}
-//x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação dos métodos da classe abstrata Console.
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
 @Override
 public void insertController()
 {
@@ -457,7 +363,6 @@ public void power_ON()
 @Override
 public void power_OFF()
 {
-<<<<<<< HEAD
 	if (_power)
     {
 		System.out.println("Shutting down Xbox 360. Please wait...");
@@ -487,20 +392,6 @@ public String toString()
    else info.append("OFF\n");
    
    return info.toString();
-=======
-	 if (!this._power)
-	 {
-		 this.setPower(true);
-	 	System.out.println("\t-XBOX 360-");    
-	 	System.out.println("Loading Xbox 360. Please wait..."); 
-	 	System.out.println("Scanning components...");    
-	 	System.out.println(this);
-	    	motionSensing();
-	        menu();
-	 }
-	 else
-		this.setPower(true);
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
 }
 
 @Override

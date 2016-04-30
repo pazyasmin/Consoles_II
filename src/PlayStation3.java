@@ -26,7 +26,6 @@ public PlayStation3 (boolean power, String model, String manufacturer, Date rele
     this.setPSMoveCoordinates(0, 0, 0);
 }
 	
-<<<<<<< HEAD
 public PlayStation3(PlayStation3 p)
 {
     super(p);
@@ -38,36 +37,6 @@ public PlayStation3(PlayStation3 p)
 }
 
 //Implementação dos métodos da interface do PlayStation 3.
-=======
-	public PlayStation3(PlayStation3 p)
-	{
-        super(p);
-        this._move = p._move;
-        this._moveCoordinates = new int [3];
-        this._moveCoordinates[0] = p._moveCoordinates[0];  //X
-		this._moveCoordinates[1] = p._moveCoordinates[1];; //Y
-		this._moveCoordinates[2] = p._moveCoordinates[2];; //Z
-    }
-	
-	
-	 public String toString()
-	 {
-	        StringBuilder info = new StringBuilder();
-	        
-	        info.append( super.toString() );
-	        info.append("PS Move Status: ");
-	        if (this._move){
-	            info.append("ON\n");
-	            info.append("XYZ Coordinates: (" + this._moveCoordinates[0] + ", " 
-	                    + this._moveCoordinates[1] + ", " + this._moveCoordinates[3] + ")\n");
-	        }
-	        else info.append("OFF\n");
-	        
-	        return info.toString();
-	    }
-//x------------------x------------------x------------------x------------------x------------------x//
-//ImplementaÃ§Ã£o dos mÃ©todos da interface do PlayStation 3.
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
 @Override
 public void motionSensing_ON()
 {
@@ -187,85 +156,11 @@ public final void setPSMove(boolean psMove)
  @Override
  public boolean getPSMove()
  {
-<<<<<<< HEAD
 	 return this._PSMove;
  }  
-=======
-	 return this._move;
- }
- 
-//x------------------x------------------x------------------x------------------x------------------x//	
-//ImplementaÃ§Ã£o de mÃ©todos da interface IGameLoader	  
-//Play from media
-@Override
-public void play(Game game)  
-{
-	  if (!game.equals(this.getPlatform()))
-		 System.out.println("Action denied. The game '" + game.getTitle() + "' is not compatible with your system.");
-	  else
-	  {
-	   System.out.println("Loading game from media. Please wait...");
-	   System.out.println("You're now playing "+ game.getTitle() + "!");
-	   System.out.println("Press enter to quit game. ");
-	   Scanner enter = new Scanner(System.in);
-	   enter.nextLine();
-	   enter.close();
-	   System.out.println("Exiting game...");
-	     
-	  }
-}
-      
-//Play from Hard Drive
-@Override
-public void play()
-{
-	if ( this._numControllers == 0 ) 
-		System.out.println("Error. You can't play a game with no controllers.");
-	    else
-	    if (_numGames == 0 )
-	        System.out.println("Error. There are currently no games installed on your hard drive.");
-	    else
-	    {
-	   	 System.out.println("Which of the following would you like to play?");
-	
-	        int i = 1;
-	        for (Game gameList : _games) 
-	        {
-	            System.out.println( i + " - " + gameList.getTitle());
-	            i++;
-	        }
-	        	
-	        System.out.println("\nEnter an option: ");	
-	        Scanner num = new Scanner(System.in);
-	        int option=-1;
-	        while(option<=0 || option > _numGames || !(num.hasNextInt()))
-	        {
-	   		 option = num.nextInt();
-	   		 if(option < 0 || option > _numGames || !(num.hasNextInt()))
-	   			 System.out.println ("Please enter a valid option: ");
-	        }
-	   		
-	        num.close();
-	        System.out.println("Loading game. Please wait...");
-	        System.out.println("You're now playing "+ _games.get(option-1).getTitle() + "!");
-	        System.out.println("Press enter to quit game. ");
-	        Scanner enter = new Scanner(System.in);
-	        enter.nextLine();
-	        System.out.println("Quitting game...");
-	        enter.close();        
-	    }	
-}
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
 
 
-<<<<<<< HEAD
 //Implementação dos métodos da classe abstrata Console.
-=======
-}
-	 
-//x------------------x------------------x------------------x------------------x------------------x//	
-//ImplementaÃ§Ã£o dos mÃ©todos da classe abstrata Console.
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
  @Override
  public void insertController()
  {
@@ -456,7 +351,6 @@ public void play()
 
  }
  
-<<<<<<< HEAD
 //Implementação dos métodos da interface IDevice
 @Override
 public void power_ON()
@@ -523,24 +417,4 @@ public void setPSMoveCoordinates(int x, int y, int z)
  
 }
 
-=======
- @Override
- public void startScreen()
- {
-	 if (!this._power)
-	    {
-	 	this.setPower(true);
-	 	System.out.println("\t-PlayStation 3-");    
-	 	System.out.println("Loading PlayStation 3. Please wait..."); 
-	 	System.out.println("Scanning components...");    
-	 	System.out.println(this);
-	    	motionSensing();
-  
-        	menu();
-	    }
-	 	else
-			this.setPower(true);
- }
-//		  
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
 }

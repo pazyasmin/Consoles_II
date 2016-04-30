@@ -23,10 +23,10 @@ public class Controller
 	
 	  public Controller (boolean wireless, String[] buttons)
 	  {
-	        this._buttons = new ArrayList<>(s_maxButtons);
-	        this.setButtons(buttons);
-	        this.setWireless(wireless);
-	 }
+        this._buttons = new ArrayList<>(s_maxButtons);
+        this.setButtons(buttons);
+        this.setWireless(wireless);
+	  }
 	  
 	  public void setWireless(boolean wireless)
 	  {
@@ -77,7 +77,4 @@ public class Controller
 	  
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> branch 'master' of https://github.com/pazyasmin/Consoles_II.git
