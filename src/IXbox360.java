@@ -1,7 +1,6 @@
 
 public interface IXbox360 
 {
-	public void motionSensing();
 	public void setKinect(boolean kinect);
 	public boolean getKinect();
 	public void setKinectCoordinates(int x, int y, int z);

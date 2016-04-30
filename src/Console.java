@@ -1,18 +1,34 @@
+/*
+* 
+*/
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Random;
 
-public abstract class Console extends Device 
+public abstract class Console extends Device  
 {
 	protected static final int s_maxControllers = 4;
+	protected static final int s_maxUsers = 12;
 	
-	protected String _platform;
+	protected Platforms _platform;
 	protected double _softwareVersion;
 	protected boolean _internetConnection; 
-	protected double[] _storage; // Internal, used and free spaces.
+	protected double[] _storage; 
+	protected Game[] _availableGames = {
+			new Game("Halo 5", Platforms.XBOX360, 50.00),
+			new Game("Gears of War", Platforms.XBOX360, 34.00),
+			new Game("Killer Instinct", Platforms.XBOX360, 61.00),
+			new Game("Sonic Generations", Platforms.XBOX360, 20.00),
+			new Game("God of War 3", Platforms.PLAYSTATION3, 54.00),
+			new Game("Bayonetta", Platforms.PLAYSTATION3, 50.00),
+			new Game("Metal Gear Solid", Platforms.PLAYSTATION3, 40.00),
+			new Game("Dead Space 3", Platforms.PLAYSTATION3, 60.00),
+	};
+	protected int _numAvailableGames = 8;
+	protected ArrayList<User> _users;
 	protected ArrayList<Game> _games;
 	protected ArrayList<Controller> _controllers;
-	protected ArrayList<User> _users; 
 	protected int _numUsers = 0; 
 	protected int _numGames = 0; 
 	protected int _numControllers = 0;
@@ -21,137 +37,163 @@ public abstract class Console extends Device
 public Console() 
 {
 	super();
-	this.setPlatform("*Platform*");
+	this.setPlatform(Platforms.UNSPECIFIED);
 	this._softwareVersion = 1.00;
 	this._internetConnection = false;
 	this._storage = new double[3];
-	this._storage[0] = 500.00; 
-	this._storage[1] = 0.00; 
-	this._storage[2] = 500.00; //Internal Storage/Used Storage/Free Storage
+	this._storage[0] = 500.00; //Internal Storage
+	this._storage[1] = 0.00;   //Used Storage
+	this._storage[2] = 500.00; //Free Storage
+	this._users = new ArrayList<>();
 	this._controllers = new ArrayList<>();
 	this._games = new ArrayList<>();
-	this._users = new ArrayList<>();
 }
 
-public Console(String model, String manufacturer, /*Date releaseDate, */ boolean power, boolean ethernetCard, 
-		String platform, double softwareVersion, double internalStorage)
+public Console(boolean power, String model, String manufacturer, boolean ethernetCard, 
+		Platforms platform, double softwareVersion, double internalStorage)
 {
-	super(model, manufacturer, /*releaseDate,*/ power, ethernetCard);
+	super(power, model, manufacturer, ethernetCard);
 	this.setPlatform(platform);
 	this._softwareVersion = softwareVersion;
-	this._storage[0] = internalStorage; 
-	this._storage[1] = 0.00; 
-	this._storage[2] = internalStorage;
+	this.setAvailableStorage(internalStorage);
 	this._controllers = new ArrayList<>();
 	this._games = new ArrayList<>();
 	this._users = new ArrayList<>();
+	
+}
+
+public Console(boolean power, String model, String manufacturer, Date releaseDate, boolean ethernetCard, 
+		Platforms platform, double softwareVersion, double internalStorage)
+{
+	super(power, model, manufacturer, releaseDate, ethernetCard);
+	this.setPlatform(platform);
+	this._softwareVersion = softwareVersion;
+	this._storage = new double[3];
+	this.setAvailableStorage(internalStorage);
+	this._storage[0] = internalStorage;
+	this._storage[1] = 0.00;
+	this._storage[0] = internalStorage;
+	this._controllers = new ArrayList<>();
+	this._games = new ArrayList<>();
+	this._users = new ArrayList<>();
+	
 }
 
 public Console(Console c)
 {
 	super(c);
+	
 	this._platform = c._platform;
 	this._softwareVersion = c._softwareVersion;
-	this._storage[0] = c._storage[0];
-	this._storage[1] = c._storage[1];
-	this._storage[2] = c._storage[2];
-    this._games= new ArrayList<>();
+	for (int i = 0; i < 3; i++)
+		this._storage[i] = c._storage[i];
+	this._games= new ArrayList<>();
     this._controllers = new ArrayList<>(s_maxControllers);
+    this._users = new ArrayList<>(s_maxUsers);
 	this._controllers = c._controllers;
-	this._games = c._games;
 	this._numControllers = c._numControllers;
-	this._numGames = c._numGames;
 	this._users = c._users;
     this._numUsers = c._numUsers;
+	this._games = c._games;
+	this._numGames = c._numGames;
 	
 }
 
-@Override
-public String toString(){
-    StringBuilder info = new StringBuilder();
-    
-    info.append(super.toString());
-    info.append("Platform: " + this._platform + ".\n");
-    info.append("Software Version: " + this._softwareVersion + ".\n");
-    info.append("Storage Capacity: \nTotal: " + this._storage[1] + "GB, Used: "
-            + this._storage[2] + "GB, Free: "+this._storage[3] + "GB.");
-    info.append("Games installed: " + this._numGames + ".\n");
-    info.append("Plugged controllers: " + this._numControllers + ".\n");
-    
-    return info.toString();
-}
 
-//x------------------x------------------x------------------x------------------x------------------x//
-//Platform.
-public final void setPlatform(String platform)
+//Métodos abstratos.
+public abstract void menu();
+public abstract void insertController();
+public abstract void motionSensing_ON();
+public abstract void motionSensing_OFF();
+
+
+// Plataforma.
+public final void setPlatform(Platforms platform)
 {
-	if (platform.length() > s_maxLength)
-		this._platform = platform.substring(0, s_maxLength);
-	else 
-	if ("\0".equals(platform))
-		this._platform = "**Platform**"; 
-		else
-			this._platform = platform;		
 	this._platform = platform;
 }
 
-public String getPlatform()
+public Platforms getPlatform()
 {
 	return this._platform;
 }
 
-//Software Version.	
+// Versão de Software.	
+public final void setSoftwareVersion(double softwareVersion)
+{
+	if (softwareVersion<0.01)
+		this._softwareVersion = 1.0;
+	else
+		this._softwareVersion = softwareVersion;
+}
+
 public double getSoftwareVersion()
 {
 	return this._softwareVersion;
 }
 
-//Storage.
-public double getInternalSpace()
+// Capacidade de Armazenamento.
+public final void setAvailableStorage(double internalStorage)
+{
+	this._storage[0] += internalStorage;
+	this._storage[2] += internalStorage;
+}
+
+public double getInternalStorage()
 {
 	return this._storage[0];
 }
 
-public final void setUsedSpace(double space)
+public final void setUsedStorage(double space)
 {
 	if (Math.abs(space) > 1)
 	{
 		this._storage[1] += space;
-		setFreeSpace(-1*space); 
+		this.setFreeStorage(-1*space); 
 	}
 	else
-		System.out.println ("\nMemory error.");
+		System.out.println ("Memory error.");
 }
 	
-public double getUsedSpace()
+public double getUsedStorage()
 {
 	return this._storage[1];
 }
 
-public final void setFreeSpace(double space)
+public final void setFreeStorage(double space)
 {
 	this._storage[2] += space;
 }
 
-public double getFreeSpace()
+public double getFreeStorage()
 {
 	return this._storage[2];
 } 	
 
-//Format hard drive.
+public Game[] getAvailableGames()
+{
+	return this._availableGames;
+}
+
+// Formatar hard drive.
 public void format()
 {
-	this._storage[3] = this._storage[0];
-	this._storage[2] = 0.00;
+	this._storage[2] = this._storage[0];
+	this._storage[1] = 0.00;
 	this._users.clear();
 	this._controllers.clear();
 	this._games.clear();
+	this._numUsers = 0;
+	this._numControllers = 0;
+	this._numGames = 0;
 	
 }
-//x------------------x------------------x------------------x------------------x------------------x//
- //User.
- public void createUser()
- {
+
+
+
+// User.
+public void createUser()
+{
 	System.out.println("Enter your name: ");
 	Scanner input = new Scanner(System.in);
 	
@@ -164,18 +206,18 @@ public void format()
 	String gamertag = input2.nextLine();
 	gamertag = gamertag.replaceAll("&(?!;)[^]*", "");
 	
-	User newUser = new User(name, gamertag);
-	
 	input.close();
 	input2.close();
+	
+	User newUser = new User(name, gamertag);
 	
 	boolean itExists = false;
 	for (User users : _users)
 	{
 	    if (users.equals(newUser))
 	    {
-	        System.out.println("User already exists.");
-	        itExists = true;
+	    	System.out.println("Error. The user '" + name + "' already exists.");
+	    	itExists = true;
 	        break;
 	    }
 	}
@@ -184,46 +226,37 @@ public void format()
 	{
         this._numUsers++;
         _users.add(newUser);
-        System.out.println("User successfully created.");
+        System.out.println(("The user '" + name + "' was successfully created."));
     }
 }
  
-public void createUser(User user)
-{
-	if(!this._users.contains(user))
-	{
-		this._numUsers++;
-		this._users.add(user);
-		System.out.println("The user '" + user.getName() + "' was successfully created.");
-	}
-	else
-		System.out.println("Error. The user '" + user.getName() + "' already exists.");
- 	
-}
 
  public void deleteUser()
  {	 
-    if ( this._numUsers > 0 ) 
+    if (!(this._numUsers > 0)) 
+    	System.out.println("Error. There are no users registered yet.");
+    else
     {
-	    System.out.println("\nWhich of the following would you like to delete? \n");
+	    System.out.println("Which of the following would you like to delete? \n");
+
 	    int i = 1;
-	    	for ( User u : this._users )
-	    	{
-	    		System.out.println (i +  " - " + u);
-	    		i++;
-	    	}
-	    	System.out.println("> ");
-	    	Scanner scanner = new Scanner(System.in);
-	    	int op;
-	    
+    	for ( User u : this._users )
+    	{
+    		System.out.println (i +  " - " + u);
+    		i++;
+    	}
+
+    	Scanner input = new Scanner(System.in);
+    	int op;
+
 	    while(true)
 	    {
-	        if (scanner.hasNextInt())
-	            op = scanner.nextInt();
+	        if (input.hasNextInt())
+	            op = input.nextInt();
 	        else
 	        {
 	            System.out.println("Please enter a valid option:\n ");
-	            scanner.next();
+	            input.next();
 	            continue;
 	        }
 	        break;
@@ -232,13 +265,14 @@ public void createUser(User user)
 	    op -= 1;
 	    if(op < 0 || op > this._numUsers - 1)
 	    {
-	        System.out.println("Invalid user.");
+	        System.out.println("Error. The specified user is invalid.");
 	    }
 	    else
 	    {
-	        System.out.print("\nDelete " + _users.get(op).getName() + "? [Y/N]\n");
-	        Scanner scanner2 = new Scanner(System.in);
-	        if(scanner2.next().equalsIgnoreCase("y")||scanner2.next().equalsIgnoreCase("yes")) 
+	        System.out.println("Delete " + _users.get(op).getName()  + "? [Y/N]\n");
+	        Scanner input2 = new Scanner(System.in);
+	        
+	        if(input2.next().equalsIgnoreCase("y") || input2.next().equalsIgnoreCase("yes")) 
 	        {
 	        	this._users.remove(op);
 	            this._numUsers--;
@@ -246,12 +280,12 @@ public void createUser(User user)
 	        }
 	        else
 	            System.out.println("Maybe next time.");
-	        scanner.close();
-	        scanner2.close();                
+	        
+	        input.close();
+	        input2.close();                
 	    }
     }
-    else
-    	System.out.println("There are no users yet.");
+
 }
  
 public void deleteUser(User user)
@@ -266,52 +300,176 @@ public void deleteUser(User user)
    	}
 }	  
 
-//Internet.
+
+// Connect to the internet.
 public void connectToTheInternet()
 {
 	if (this._ethernetCard)
 		if (!this._internetConnection)
 			this._internetConnection = true;
 		else
-			System.out.println("\nYour console is already connected to the internet.");
+			System.out.println("Your console is already connected to the internet.");
 	else 
-		System.out.println ("\nYour console does not support online functionality.");
-			
-}		
-//Update.
+		System.out.println ("Your console does not support online functionality.");
+}			
+		
+// Update system.
 public void update()
 {
  	double latest = 0.15;
  	this.connectToTheInternet();
  	if (this._internetConnection)
  	{
-  	Random randomGenerator = new Random();  
-  	boolean randomBool = randomGenerator.nextBoolean();
-  	if (randomBool)
-      {
-  		System.out.print("\nThere are new updates available. Press enter to proceed. ");
-			Scanner enter = new Scanner(System.in);
-			enter.nextLine();
+	  	Random randomGenerator = new Random();  
+	  	boolean randomBool = randomGenerator.nextBoolean();
+	  	if (randomBool)
+	  	{
+	  		System.out.println("There are new updates available. The current software version is "+ this.getSoftwareVersion() +". \nPress enter to proceed. ");
+			Scanner scanner = new Scanner(System.in);
+			scanner.nextLine();
 			System.out.println("Updating system...");
-			enter.close();
 			this._softwareVersion += latest;
 			System.out.println("Your system has been updated. The current version is "+ this.getSoftwareVersion());
-      }
-      else
-      	System.out.print("\nThere are no updates available.");      
+			scanner.close();
+	  	}
+	  	else
+	      	System.out.println("There are no updates available.");      
  	}
  	else
-     System.out.print("\nInternet connection failed.");
+     System.out.println("Internet connection failed.");
 }
+
+
+//Jogar de alguma mídia de jogo (cds, blurays, cartuchos, etc).
+public void play(Game game)  
+{
+	  if (!game.equals(this.getPlatform()))
+		 System.out.println("Action denied. The game '" + game.getTitle() + "' is not compatible with your system.");
+	  else
+	  {
+	   System.out.println("Loading game from media. Please wait...");
+	   System.out.println("You're now playing "+ game.getTitle() + "!");
+	   System.out.println("Press enter to quit game. ");
+	   Scanner enter = new Scanner(System.in);
+	   enter.nextLine();
+	   enter.close();
+	   System.out.println("Exiting game...");
+	     
+	  }
+}
+
+
+// Jogar jogos instalados no hard drive.
+public void play()
+{
+	if ( this._numControllers == 0 ) 
+		System.out.println("Error. You can't play a game with no controllers.");
+	    else
+	    	if (_numGames == 0 )
+	    		System.out.println("Error. There are currently no games installed on your hard drive.");
+	    	else
+	    	{
+	    		System.out.println("Which of the following would you like to play?");
+	
+		        int i = 1;
+		        for (Game gameList : _games) 
+		        {
+		            System.out.println( i + " - " + gameList.getTitle());
+		            i++;
+		        }
+		        	
+		        System.out.println("Enter an option: ");	
+		        Scanner input = new Scanner(System.in);
+		        int option;
+		        while(true)
+		        {
+		        	if (input.hasNextInt())
+		        		option = input.nextInt();
+		        	else
+		        	{
+		        		System.out.println("Error. Enter a valid option.");
+		        		input.next();
+		        		continue;
+		        	}
+		        	break;
+		        }
+		        
+		        input.close();
+		        
+		   		 if(option < 0 || option > _numGames)
+		   			System.out.println("The game is not installed.");
+		   		  else		
+		   			{
+				        System.out.println("Loading game. Please wait...");
+				        System.out.println("You're now playing "+ _games.get(option-1).getTitle() + "!");
+				        System.out.println("Press enter to quit game. ");
+				        Scanner enter = new Scanner(System.in);
+				        enter.nextLine();
+				        System.out.println("Quitting game...");
+					        enter.close();        
+			   		}
+			    }	
+}
+
+public void displayGames()
+{
+	 
+	if (this._numGames == 0)
+		System.out.println ("No games have been found.");
+	else
+	{
+		int i = 1;
+		for (Game game : _games)
+		{
+			System.out.println (i + " - " + game);
+			i++;
+		}
+	}
+}
+
+public Game menuAvailableGames()
+{
+	int i;
+	System.out.println ("Available Games");
+	for (i = 0; i < this._numAvailableGames; i++)
+		System.out.println("Option " +(i+1) + " - "+ this._availableGames[i].getTitle());
+	
+	int usrInput=0;
+	boolean done = false;
+	while(!done)
+    {	 
+		  Scanner sc = new Scanner(System.in);
 		
-//Game. 
+		  try
+		  {
+		    System.out.println("Please, enter one of the above options.");
+		    usrInput=sc.nextInt();
+		  }
+		  catch(InputMismatchException exception)
+		  {
+		    System.out.println("This is not an integer.");
+		  }
+		  
+		  if (usrInput < 0 || usrInput > 8)
+		  {
+			  System.out.println("This is not a valid option.");
+		  }
+		  else
+			  done = true;
+		  sc.close();
+    }
+	
+	return (this._availableGames[usrInput]);
+
+}
+
 public void installGame(Game game)
 {
 	if(this._games.contains(game))
    		 System.out.println("Action denied. The game '" + game.getTitle() + "' is already installed.");
 	else
 	{
-		if (!game.equals(this.getPlatform()))
+		if (!game.getPlatform().equals(this.getPlatform()) )
 			System.out.println("The game '" + game.getTitle() + "' could not be installed. It is not compatible with your system.");
 		else
 		{	 
@@ -321,7 +479,7 @@ public void installGame(Game game)
 			{
 				 this._numGames++;
 				 this._games.add(game);
-				 this.setUsedSpace(game.getSize());
+				 this.setUsedStorage(game.getSize());
 		    		 System.out.println("The game '" + game.getTitle() + "' was successfully installed!");
 			}
 		}
@@ -334,10 +492,10 @@ public void uninstallGame(Game game)
    		System.out.println("Error. The specified game was not found.");
    	else
    	{
-		this.setUsedSpace( -1*( game.getSize() ) );
+		this.setUsedStorage( -1*( game.getSize() ) );
 		this._numGames--;
 		this._games.remove(game);
-		System.out.println("The game '" + game.getTitle() + "' was successfully uninstalled!");
+		System.out.println("The game '" + game.getTitle() + "' was successfully uninstalled.");
 	}
 }
    
@@ -349,31 +507,37 @@ public void removeController()
 		System.out.println("No controllers have been found.");
 	else
 	{	
-		System.out.println ("Which controller would you like to remove? " + "(1 - " + this._numControllers + ")");
-		int i = 1;
-		for(Controller c : this._controllers)
-		{
-			System.out.println (i + " - " + c);
-			i++;
-		}
+		int usrInput=0;
+		boolean done = false;
 		
-		Scanner port = new Scanner(System.in);
-		int op;
-		while(true)
-		{
-			
-			if (port.hasNextInt())
-				op = port.nextInt();
-			else
+		while(!done)
+	    {	 
+			System.out.println ("Which controller would you like to remove? " + "(1 - " + this._numControllers + ")");
+			int i = 1;
+			for(Controller c : this._controllers)
 			{
-				System.out.println ("Please enter a valid port:\n");
-				port.next();
-				continue;
+				System.out.println (i + " - " + c);
+				i++;
 			}
-			break;
-		}
-
-		port.close();
+			  Scanner sc = new Scanner(System.in);
+			
+			  try
+			  {
+			     usrInput=sc.nextInt();
+			  }
+			  catch(InputMismatchException exception)
+			  {
+			    System.out.println("This is not an integer.");
+			  }
+			  
+			  if (usrInput <= 0 || usrInput > s_maxControllers)
+			  {
+				  System.out.println("This is not a valid option.");
+			  }
+			  else
+				  done = true;
+		sc.close();
+		int op = usrInput;
 		op -= 1;
 		
 		if (!(op < 0 && op > this._numControllers-1))
@@ -393,6 +557,7 @@ public void removeController()
 	}
 }
 
+}
 
  public void displayControllers()
  {
@@ -408,8 +573,9 @@ public void removeController()
         i++;
     }
  }
- 	
- public void displayUsers()
+
+
+public void displayUsers()
  {
  	if (this._numUsers == 0)
  		System.out.println ("No users have been found.");
@@ -424,10 +590,47 @@ public void removeController()
  	}
  }
  
-//Abstract Methods.
-public abstract void menu();
-public abstract void insertController();
-public abstract void startScreen();
-
+@Override
+public String toString()
+{
+     StringBuilder info = new StringBuilder();
+     
+     info.append(super.toString());
+     info.append("\nPlatform: " + this._platform + ".\n");
+     info.append("Software Version: " + this._softwareVersion + ".\n");
+     info.append("Storage Capacity: \nTotal: " + this._storage[0] + "GB, Used: "
+             + this._storage[1] + "GB, Free: "+this._storage[2] + "GB.\n");
+     info.append("Games installed: " + this._numGames + ".\n");
+     info.append("Plugged controllers: " + this._numControllers + ".\n");
+     
+     return info.toString();
+}
+ 
+public int posNum(final Scanner scan) 
+{
+    int input = 0;
+    boolean error = false;
+    if (scan.hasNext()) {
+        if (scan.hasNextInt()) {
+            input = scan.nextInt();
+            error = input <= 0;
+        } else {
+            scan.next();
+            error = true;
+        }
+    }
+    while (error) {
+        System.out.print("Invalid input. Please reenter: ");
+        if (scan.hasNextInt()) {
+            input = scan.nextInt();
+            error = input <= 0;
+        } else {
+            if (scan.hasNext())
+                scan.next();
+            error = true;
+        }
+    }
+    return input;
+}
 }
 

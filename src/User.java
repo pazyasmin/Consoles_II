@@ -4,13 +4,13 @@ public class User
 	 private String _name;
 	 private String _gamertag;
 	 
-	 private static int s_characterLimit = 10;
+	 private static int s_characterLimit = 25;
 	 
   
     public User()
     {
-        this._name = "Some name";
-        this._gamertag = "somegamertag";
+        this._name = "John Doe";
+        this._gamertag = "johndoegamertag";
     }
     
     public User(String name, String gamertag)
@@ -40,8 +40,6 @@ public class User
         if (name.length() < 5)
         {
             System.out.println("Name must be at least 5 characters long. ");
-            System.out.println("Assigning default name...");
-            this._name = "John Doe";
         }
         else 
         {

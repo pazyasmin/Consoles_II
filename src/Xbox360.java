@@ -1,82 +1,70 @@
 import java.util.Scanner;
 import java.util.Random;
 
-public class Xbox360 extends Console implements IXbox360, IGameLoader
+public class Xbox360 extends Console implements IDevice, IXbox360
 {
-	private boolean _kinect; 
-	private int [] _kinectCoordinates;
-	
-	public Xbox360()
-	{
-		super("Xbox 360 Premium", "Microsoft", /*releaseDate, */ false, true, "Xbox 360", 1.0, 250.00);
-		//this._releaseDate = s_releaseDate;
-		this._kinect = false;
-		this._kinectCoordinates = new int [3];
-		this.setKinectCoordinates(0, 0, 0);
-	}
-	
-	public Xbox360 (String model, String manufacturer, /*releaseDate, */ boolean power, boolean ethernetCard, 
-			String platform, double softwareVersion, double internalStorage, 
-			boolean kinect)
-	{
-	    super(model, manufacturer, /*releaseDate,*/ power, ethernetCard, 
-	    		platform, softwareVersion, internalStorage);
-	    this.setKinect(false);
-	    this._kinectCoordinates = new int [3];
-	    this.setKinectCoordinates(0, 0, 0);
-	}
-	
-	public Xbox360(Xbox360 x)
-	{
-        super(x);
-        this._kinect = x._kinect;
-        this._kinectCoordinates = new int [3];
-        this._kinectCoordinates[0] = x._kinectCoordinates[0]; //X
-		this._kinectCoordinates[1] = x._kinectCoordinates[1];; //Y
-		this._kinectCoordinates[2] = x._kinectCoordinates[2];; //Z
-    }
-	
-	 @Override
-	 public String toString()
-	 {
-	    StringBuilder info = new StringBuilder();
-	    
-	    info.append( super.toString() );
-	    info.append("Kinect Status: ");
-	    if (this._kinect)
-	    {
-	        info.append("ON\n");
-	        info.append("XYZ Coordinates: (" + this._kinectCoordinates[0] + ", " 
-	                + this._kinectCoordinates[1] + ", " + this._kinectCoordinates[3] + ")\n");
-	    }
-	    else info.append("OFF\n");
-	    
-	    return info.toString();
-	}
+	private boolean _kinect;
+	private int [] 	_kinectCoordinates;
 
-//x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação de métodos da interface IXbox360
-	 
-@Override
-public void motionSensing()
+public Xbox360()
 {
-	  System.out.println("Scanning Xbox 360 for motion sensing device...");
+	super();
+	this._platform = Platforms.XBOX360;
+	this._kinect = false;
+	this._kinectCoordinates = new int [3];
+	this.setKinectCoordinates(0, 0, 0);
+}
+
+public Xbox360 (boolean power, String model, String manufacturer, Date releaseDate, boolean ethernetCard, 
+		Platforms platform, double softwareVersion, double internalStorage, 
+		boolean kinect)
+{
+    super(power, model, manufacturer, releaseDate, ethernetCard, 
+    	  platform, softwareVersion, internalStorage);
+    this._kinect = false;
+    this._kinectCoordinates = new int [3];
+    this.setKinectCoordinates(0, 0, 0);
+}
+
+public Xbox360(Xbox360 x)
+{
+    super(x);
+    this._kinect = x._kinect;
+    this._kinectCoordinates = new int [3];
+    this._kinectCoordinates[0] = x._kinectCoordinates[0]; //X
+	this._kinectCoordinates[1] = x._kinectCoordinates[1]; //Y
+	this._kinectCoordinates[2] = x._kinectCoordinates[1]; //z
+} 
+
+// Implementação de métodos da interface IXbox360.
+@Override
+public void motionSensing_ON()
+{
+	  System.out.println("Scanning Xbox 360 components for motion sensing device...");
 	  if (!this._kinect)
 	  {
-	  	System.out.println("No motion sensing devices have been found.\nWould you like to connect your Xbox 360 to a Kinect device now?<Y/N>");
+	  	System.out.println("No kinect devices have been found.\nWould you like to connect your Xbox 360 to a Kinect device now?<Y/N>");
 		
-	  	Scanner scanner = new Scanner(System.in);
-		  if(scanner.next().equalsIgnoreCase("y")||scanner.next().equalsIgnoreCase("yes")) 
+	  	Scanner input = new Scanner(System.in);
+	  	String str = input.nextLine();
+	  	String yes = "Yes";
+	  	String no = "No"; 
+		input.close();
+		  if(str.equalsIgnoreCase(yes) || str.equalsIgnoreCase("Y")) 
 		  {
-		      System.out.println("Connecting kinect...");
-		      this.setKinect(true);
+		      System.out.println("Connecting kinect device...");
+		      this.setKinect(true); 
+		      motionSensing_ON();
 		  } 
 		  else 
-			  if(scanner.next().equalsIgnoreCase("n")||scanner.next().equalsIgnoreCase("no")) 
-				  System.out.println("Maybe next time.");
-			  else 
-				  System.out.println("Invalid option.");				  
-		 scanner.close();		 
+			  if(str.equalsIgnoreCase(no) || str.equalsIgnoreCase("N"))
+			  {
+				  
+			 
+				System.out.println("Maybe next time.");
+		  		
+			  }
+		  		return;	  
 	  }
 	  else
 	  {
@@ -89,23 +77,35 @@ public void motionSensing()
 			  randomInt[i] = rnd.nextInt(100); 
 		  }
 		  this.setKinectCoordinates(randomInt[0], randomInt[1], randomInt[2]);	  
-		  System.out.println("X: "+ this.getKinectX() + ", Y: "+ this.getKinectY() +", Z: " + this.getKinectZ());
 		  
-		  System.out.println("Would you like to disconnect your Kinect from your Xbox360?<Y/N>");
+		  System.out.println("X: "+ this.getKinectX() + ", Y: "+ this.getKinectY() +", Z: " + this.getKinectZ());
+	  }
+}
+
+
+@Override
+public void motionSensing_OFF()
+{
+	 if (this._kinect)
+	 {
+		  System.out.println("Would you like to disconnect your Kinect device?<Y/N>");
 	  
-		  Scanner scanner = new Scanner(System.in);
-		  if(scanner.next().equalsIgnoreCase("y")||scanner.next().equalsIgnoreCase("yes")) 
+		  Scanner input = new Scanner(System.in);
+		  if(input.next().equalsIgnoreCase("y")||input.next().equalsIgnoreCase("yes")) 
 		  {
 		      System.out.println("Disconnecting kinect...");
 		      this.setKinect(false);
 		  } 
 		  else 
-			  if(scanner.next().equalsIgnoreCase("n")||scanner.next().equalsIgnoreCase("no")) 
+			  if(input.next().equalsIgnoreCase("n")||input.next().equalsIgnoreCase("no")) 
 				  System.out.println("Maybe next time.");
 			  else 
 				  System.out.println("Invalid option.");				  
-		 scanner.close();
-	  }
+		  input.close();
+	 }
+	 else
+		 System.out.println("No kinect devices are connected.");
+		 
 }
 		
 
@@ -166,94 +166,16 @@ public final void setKinect(boolean kinect)
 	 return this._kinectCoordinates[2];
  }
 
-//x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação de métodos da interface IGameLoader	 
-//Play from media
-@Override
-public void play(Game game)  
-{
-	  if (!game.equals(this.getPlatform()))
-		 System.out.println("Action denied. The game '" + game.getTitle() + "' is not compatible with your system.");
-	  else
-	  {
-	   System.out.println("Loading game from media. Please wait...");
-	   System.out.println("You're now playing "+ game.getTitle() + "!");
-	   System.out.println("Press enter to quit game. ");
-	   Scanner enter = new Scanner(System.in);
-	   enter.nextLine();
-	   enter.close();
-	   System.out.println("Exiting game...");
-	     
-	  }
-}
-    
-//Play from Hard Drive
-@Override
-public void play()
-{
-	if ( this._numControllers == 0 ) 
-		System.out.println("Error. You can't play a game with no controllers.");
-	    else
-	    	if (_numGames == 0 )
-	    		System.out.println("Error. There are currently no games installed on your hard drive.");
-	    	else
-	    	{
-	    		System.out.println("Which of the following would you like to play?");
-	
-		        int i = 1;
-		        for (Game gameList : _games) 
-		        {
-		            System.out.println( i + " - " + gameList.getTitle());
-		            i++;
-		        }
-		        	
-		        System.out.println("\nEnter an option: ");	
-		        Scanner num = new Scanner(System.in);
-		        int option=-1;
-		        while(option<=0 || option > _numGames || !(num.hasNextInt()))
-		        {
-		   		 option = num.nextInt();
-		   		 if(option < 0 || option > _numGames || !(num.hasNextInt()))
-		   			 System.out.println ("Please enter a valid option: ");
-		        }
-		   		
-		        num.close();
-		        System.out.println("Loading game. Please wait...");
-		        System.out.println("You're now playing "+ _games.get(option-1).getTitle() + "!");
-		        System.out.println("Press enter to quit game. ");
-		        Scanner enter = new Scanner(System.in);
-		        enter.nextLine();
-		        System.out.println("Quitting game...");
-		        enter.close();        
-	    }	
-}
 
-@Override
-public void displayGames()
-{
-	 
-	if (this._numGames == 0)
-		System.out.println ("No games have been found.");
-	else
-	{
-		int i = 1;
-		for (Game game : _games)
-		{
-			System.out.println (i + " - " + game);
-			i++;
-		}
-	}
-
-}
-//x------------------x------------------x------------------x------------------x------------------x//	
-//Implementação dos métodos da classe abstrata Console.
+   
+// Implementação dos métodos da classe abstrata Console.
 @Override
 public void insertController()
 {
 	  System.out.println("Would you like to insert a controller?<Y/N>");
-	  Scanner scanner = new Scanner(System.in);
+	  Scanner input = new Scanner(System.in);
 	  
-	  if(scanner.next().equalsIgnoreCase("y")||scanner.next().equalsIgnoreCase("yes")) 
+	  if(input.next().equalsIgnoreCase("y")||input.next().equalsIgnoreCase("yes")) 
 	  {
 		  
 	   	 if ( this._numControllers == s_maxControllers )
@@ -269,36 +191,37 @@ public void insertController()
            
            System.out.print("Is it wireless? <Y/N>");
            
-           Scanner scanner2 = new Scanner(System.in);
-           if(scanner.next().equalsIgnoreCase("y")||scanner.next().equalsIgnoreCase("yes")) 
+           Scanner input2 = new Scanner(System.in);
+           if(input2.next().equalsIgnoreCase("y")||input.next().equalsIgnoreCase("yes")) 
  		  	{	            
            	newController.setWireless(true);
  		  	}
            else
            	newController.setWireless(false);
            
- 		  	scanner2.close();
+ 		  	input2.close();
            
  		  	this._controllers.add(newController);
-           this._numControllers++;
-           System.out.println("Controller "+ this._controllers.size() + "found!");
+ 		  	this._numControllers++;
+ 		  	System.out.println("Controller "+ this._controllers.size() + "found!");
 		 }
 	  }
 	  else 
 		  System.out.println("Operation cancelled.");
 	  
-	  scanner.close();
+	  input.close();
 }
 
 
 @Override
 public void menu()
 {
-	 int op = 0;
-       Scanner scanner = new Scanner(System.in);
-       do
+	int op = 0;
+  
+    do
        {
-           System.out.println("-Xbox 360-");
+    	   
+           System.out.println("\n\n-Xbox 360-");
            System.out.println("\nChoose one of the following options:\n");
            System.out.println("0 - System info.");
            System.out.println("1 - Play game.");
@@ -309,41 +232,28 @@ public void menu()
            System.out.println("6 - Update System.");
            System.out.println("7 - Connect PS Move");
            System.out.println("8 - Disconnect PS Move");
-           System.out.println("9 - Motion sensing.");
-           System.out.println("10 - Uninstall game.");
-           System.out.println("11 - Remove controller.");
-           System.out.println("12 - Delete user.");
-           System.out.println("13 - Display games.");
-           System.out.println("14 - Display users.");
-           System.out.println("15 - Exit.");	   	            
-           System.out.print(" > ");
-           
-       
-           while(true)
-           {
-               if (scanner.hasNextInt())
-                   op = scanner.nextInt();
-               else
-               {
-                   System.out.print("Please enter a valid option.\n > ");
-                   scanner.next();
-                   continue;
-               }
-               break;
-           }
-           
+           System.out.println("9 - Uninstall game.");
+           System.out.println("10 - Remove controller.");
+           System.out.println("11 - Delete user.");
+           System.out.println("12 - Display games.");
+           System.out.println("13 - Display users.");
+           System.out.println("14 - Turn off Xbox.");
+           System.out.println("15 - Exit.");
+           Scanner scanner = new Scanner(System.in);
+           op = posNum(scanner);
+       		         
            switch(op)
            {
                case 0:
                {
-               	System.out.println("-System Info-");
+               	   System.out.println("-System Info-");
                    System.out.println(this);
                    break;
                }
                case 1:
                {
-               		Game game = new Game("Halo","Xbox 360",120.00);
-               		this.play(game);
+            	   	Game game = this.menuAvailableGames();
+                   	this.play(game);
                		break;
                }
                case 2:
@@ -358,8 +268,8 @@ public void menu()
                }
                case 4:
                {
-               	   Game game = new Game("Halo","Xbox 360",120.00);
-                   this.installGame(game);;
+            	   Game game = this.menuAvailableGames();
+                   this.installGame(game);
                    break;
                }
                case 5:
@@ -374,84 +284,128 @@ public void menu()
                }
                case 7:
                {
-                   this.setKinect(true);
+                   motionSensing_ON();
                    break;
                }
                case 8:
                {
-                   this.setKinect(false);
+                   motionSensing_OFF();
                    break;
                }
+               
                case 9:
                {
-                   motionSensing();
+            	   Game game = this.menuAvailableGames();
+                   this.uninstallGame(game);
                    break;
                }
                case 10:
                {
-            	   Game game = new Game("Halo","Xbox 360",120.00);
-                   this.uninstallGame(game);;
+                   this.removeController();
                    break;
                }
                case 11:
                {
-                   this.removeController();
+                   this.deleteUser();
                    break;
                }
                case 12:
                {
-                   this.deleteUser();
+                   this.displayGames();;
                    break;
                }
                case 13:
                {
-                   this.displayGames();;
+                   this.displayUsers();
                    break;
                }
                case 14:
                {
-                   this.displayUsers();
-                   break;
-               }
-               case 15:
-               {
-                   this.format();
+                   this.power_OFF();
                    break;
                }
                default:
                {
-                   if (op != 16)
+                   if (op != 15)
                    {
                    	throw new IllegalArgumentException("\nInvalid option.\n");
                    }
                }
            }
        }while(op != 15);
+           
        
-       scanner.close();
-       this.setKinect(false);
-       System.out.println("Shutting down Xbox 360. Please wait...");
-       this.setPower(false);
-       System.out.println("Your Xbox360 has been turned off.");
+}
+
+// Implementação dos métodos da interface IDevice
+@Override
+public void power_ON()
+{
+	if (!this._power)
+	{
+		System.out.println("\t-XBOX 360-");    
+	 	System.out.println("Loading Xbox 360. Please wait..."); 
+	 	System.out.println("Scanning components...");    
+	 	System.out.println(this);
+	    motionSensing_ON();
+	    menu();
+	}
+	else
+    {
+		System.out.println("Your Xbox 360 is already turned on.\nRestarting..."); 
+        this._power = false;
+        power_ON();
+        System.out.println("Your Xbox 360 has been restarted!\n");
+    }
 }
 
 
 @Override
-public void startScreen()
+public void power_OFF()
 {
-	 if (!this._power)
-	 {
-        this.setPower(true);
-	 	System.out.println("\t-XBOX 360-");    
-	 	System.out.println("Loading Xbox 360. Please wait..."); 
-	 	System.out.println("Scanning components...");    
-	 	System.out.println(this);
-	    motionSensing();
-
-        menu();
-	 }
-	 else
-		 this.setPower(true);
+	if (_power)
+    {
+		System.out.println("Shutting down Xbox 360. Please wait...");
+		this._power = false;
+		System.out.println("Your Xbox 360 has been turned off."); 
+    }
+    else
+    	System.out.println("Your Xbox 360 is already turned off."); 
 }
-//
+
+
+/* "The reason people override the ToString() method is to have a default string representation 
+ * of your object, usually for display to the user or in a log or console".
+*/
+@Override
+public String toString()
+{
+   StringBuilder info = new StringBuilder();
+   
+   info.append( super.toString() );
+   info.append("Kinect Status: ");
+   if (this._kinect)
+   {
+       info.append("ON\n");
+       info.append("Kinect Coordinates: (" + this._kinectCoordinates[0] + ", " + this._kinectCoordinates[1] + ", " + this._kinectCoordinates[2] + ")\n");
+   }
+   else info.append("OFF\n");
+   
+   return info.toString();
+}
+
+@Override
+//Connect to the internet.
+public void connectToTheInternet()
+{
+	if (this._ethernetCard)
+		if (!this._internetConnection)
+			this._internetConnection = true;
+		else
+			System.out.println("Your console is already connected to the internet.");
+	else 
+		System.out.println ("Your console does not support online functionality.");
+			
+}		
+
 }

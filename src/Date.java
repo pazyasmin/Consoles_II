@@ -1,4 +1,3 @@
-
 public class Date 
 {
 	
@@ -29,7 +28,9 @@ public Date(Date d)
     this._month = d._month;
     this._year = d._year;
 }
-//x------------------x------------------x------------------x------------------x------------------x//
+
+
+
 public final void setYear(int year)
 {
 		if (year < 0)
@@ -51,7 +52,7 @@ public final void setMonth(int month)
 		this._month = month;
 }
 
-public int getMonth(int month)
+public int getMonth()
 {
 	return this._month;
 }
@@ -64,18 +65,20 @@ public final void setDay(int day)
 		System.out.println("Error: The specified day is invalid.");
 }
 
-public int getDay(int day)
+public int getDay()
 {
 	return this._day;
 }
 
-public void setDate(int day, int month, int year)
+public final void setDate(int day, int month, int year)
 {
 	this.setYear(year);
 	this.setMonth(month);
 	this.setDay(day);
 }
-//x------------------x------------------x------------------x------------------x------------------x//	
+
+
+
 public boolean validateMonth(int day)
 {
 	int [] daysPerMonth;
@@ -98,12 +101,11 @@ public boolean leapYear(int day)
 	       (this._year % 4 == 0 && this._year % 100 != 0)));
 }
 
-//x------------------x------------------x------------------x------------------x------------------x//
-@Override//The reason people override the ToString() method is to have a default string representation 
-		//of your object, usually for display to the user or in a log or console
+@Override
+//The reason people override the ToString() method is to have a default string representation 
+//of your object, usually for display to the user or in a log or console
 public String toString()
-{
-	return String.format("%d/%d/%d", _day, _month, _year);
-	}
+{return String.format("%d/%d/%d", _day, _month, _year);}
+
 }
 	

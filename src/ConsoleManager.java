@@ -3,91 +3,172 @@ import java.util.Scanner;
 
 public class ConsoleManager 
 {
-	static int n = 2;
-	
-	public static void main(String[] args) 
-	{	 
-		int numPSList = 0;
-		ArrayList<Xbox360> xboxList = new ArrayList<Xbox360>(); 
-		ArrayList<PlayStation3> psList = new ArrayList<PlayStation3>(); 
-			
-			for (int i=0; i < n;i++)
-			{
-				xboxList.add(new Xbox360());
-			}
-			
-			for (int i=0; i < n;i++)
-			{
-				psList.add(new PlayStation3());
-			}
+
+	private ArrayList<Xbox360> xboxes = new ArrayList<>();
+	private ArrayList<PlayStation3> playstations = new ArrayList<>();
+
+	public void instancingConsoles()
+	{
+		Date date1 = new Date(10,06,2013);
+		Date date2 = new Date(22,11,2005);
+		Date date3 = new Date(11,11,2006);
+		Date date4 = new Date(4,10,2012);
 		
-        Scanner in = new Scanner(System.in);
-      
+		
+		this.xboxes.add(new Xbox360(false, "Xbox 360 S", "Microsoft", date1, true, Platforms.XBOX360, 4.0, 320.00, false));   
+		this.xboxes.add(new Xbox360(false, "Xbox 360 Premium", "Microsoft", date2, true, Platforms.XBOX360, 1.0, 80.00, false));     
+		this.playstations.add(new PlayStation3(false, "PlayStation 3 60GB", "Sony", date3, true, Platforms.PLAYSTATION3, 1.0, 60.00, false));
+		this.playstations.add(new PlayStation3(false, "PlayStation 3 Super Slim", "Sony", date4, true, Platforms.PLAYSTATION3, 1.0, 500.00, false));
+
+	}
+	
+	public void manager()
+	{
+        int op = 0;
+
+        instancingConsoles();
+				
         System.out.println("-Console Manager-");
-        System.out.println("Please enter your choice: ");
-        System.out.println("1. Access Xbox array."); 
-        System.out.println("2. Access PlayStation array."); 
-        System.out.println("3. Exit Console Manager."); 
-        System.out.println("Invalid choice.");
-        int choice=in.nextInt();
-        in.close();
-	        switch (choice) 
-	        {
-	            case 1:   	
-	            {      	
-	            	System.out.println("Enter object index: ");
-	            	try
-	            	{	
-		                Scanner i = new Scanner(System.in);
-		                int index=i.nextInt();
-			                if (xboxList.isEmpty())
-			                	 System.out.println("Empty xbox array.");
-			                else 
-			                {
-			                	xboxList.get(index).startScreen();
-			                }
-		                i.close();
-		        	}
-		        	catch(ArrayIndexOutOfBoundsException e)
-		        	{
-		        		System.out.println ("Index out  of bounds");
-		        	}
-	            	break;
-	        	}
-	            case 2: 
-	            {
-	            	System.out.println("Enter object index: ");
-	            	try
-	            	{	
-		            	Scanner i = new Scanner(System.in);
-		                int index=i.nextInt();
-		                
-		                if (index < numPSList)
-			            {
-			                if (psList.isEmpty())
-			                	 System.out.println("Empty PS array.");
-			                else
-			                {
-			                	psList.get(index).startScreen();
-			                }
-			            }
-		                else
-		                	System.out.println("Invalid index.");
-		                i.close();
-	            	}
-	            	catch(ArrayIndexOutOfBoundsException e)
-	            	{
-	            		System.out.println ("Index out  of bounds");
-	            	}
-	            	break;
-	        	}
-	            case 3: 
-	            	break;
-	            default: 
-	            	System.out.println("Invalid choice.");
-	            	
+        System.out.println("Which of the following consoles would you like to use?");
+        System.out.println("1." + this.xboxes.get(0)._model); 
+        System.out.println("2."+ this.xboxes.get(1)._model); 
+        System.out.println("3. "+ this.playstations.get(0)._model); 
+        System.out.println("4." + this.playstations.get(1)._model);
+        System.out.println("\n");
+        Scanner scanner = new Scanner(System.in);
+        op = posNum(scanner);
+
+    	
+         
+        switch (op) 
+        {    
+        	case 1:   	
+            {  
+            	op -=1;
+            	
+            	try{	
+            	
+                    System.out.println("The object at " + op + " is a "+ xboxes.get(op).getModel());
+        		}
+                catch (ArrayIndexOutOfBoundsException e){
+                	System.out.println("Sorry, that index is out of bounds. A default index will be assigned. ");
+                    op = 0;
+                }         
+                
+            	if (xboxes.get(op) instanceof Xbox360)
+            	{
+            		
+        			xboxes.get(op).power_ON();
+	      		   	xboxes.get(op).menu(); 
+    			}	
+	              
+            	break;   		   
+        	}
+            
+            
+            case 2: 
+            {
+            	op -=1;
+            	
+            	try{	
+            	
+                    System.out.println("The object at " + op + " is a "+ xboxes.get(op).getModel());
+        		}
+                catch (ArrayIndexOutOfBoundsException e){
+                	System.out.println("Sorry, that index is out of bounds. A default index will be assigned. ");
+                    op = 0;
+                }         
+                
+            	if (xboxes.get(op) instanceof Xbox360)
+            	{
+            		
+        			xboxes.get(op).power_ON();
+	      		   	xboxes.get(op).menu(); 
+    			}	
+	              
+            	break;   		
+            }
+   
+            
+            case 3: 
+            {
+            	op -=3;
+            	
+            	try{	
+            	
+                    System.out.println("The object at " + op + " is a "+ playstations.get(op).getModel());
+        		}
+                catch (ArrayIndexOutOfBoundsException e){
+                	System.out.println("Sorry, that index is out of bounds. A default index will be assigned. ");
+                    op = 0;
+                }         
+                
+            	if (playstations.get(op) instanceof PlayStation3)
+            	{
+            		
+            		playstations.get(op).power_ON();
+            		playstations.get(op).menu(); 
+    			}	
+	              
+            	break;   		
+            }
+            
+            case 4:
+            {
+            	op -= 3;
+            	
+            	try{	
+                	
+                    System.out.println("The object at " + op + " is a "+ playstations.get(op).getModel());
+        		}
+                catch (ArrayIndexOutOfBoundsException e){
+                	System.out.println("Sorry, that index is out of bounds. A default index will be assigned. ");
+                    op = 0;
+                }         
+                
+            	op -= 3;
+            	
+            	if (playstations.get(op) instanceof PlayStation3)
+            	{
+            		
+		    		   playstations.get(op).power_ON();
+		     		   playstations.get(op).menu();	     		  
+                }
+            		break;
+            }
+            	default: 
+            		System.out.println("Invalid choice.");        	
+        }
+        scanner.close();
+	}
+	
+public int posNum(final Scanner scan) 
+{
+	    int input = 0;
+	    boolean error = false;
+	    if (scan.hasNext()) {
+	        if (scan.hasNextInt()) {
+	            input = scan.nextInt();
+	            error = input <= 0;
+	        } else {
+	            scan.next();
+	            error = true;
 	        }
-    }
+	    }
+	    while (error) {
+	        System.out.print("Invalid input. Please reenter: ");
+	        if (scan.hasNextInt()) {
+	            input = scan.nextInt();
+	            error = input <= 0;
+	        } else {
+	            if (scan.hasNext())
+	                scan.next();
+	            error = true;
+	        }
+	    }
+	    return input;
+	}
+	
 }
- 
+
 

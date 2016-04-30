@@ -2,17 +2,17 @@
 public class Game 
 {
 	public String _title;
-	public String _platform;
+	public Platforms _platform;
 	public double _size; 
 
 	public Game()
 	{
 		this._title = "JOGO X";
-		this._platform = "PLATAFORMA X";
+		this.setPlatform(Platforms.UNSPECIFIED);
 		this._size = 0.00;
 	}
 	
-	public Game(String title, String platform, double size)
+	public Game(String title, Platforms platform, double size)
 	{
 		this.setTitle(title);;
 		this.setPlatform(platform);
@@ -29,8 +29,10 @@ public class Game
 	
 	public final void setTitle(String title)
 	{
-		if (!("\0".equals(title)))
-			this._title = title;	
+		if (!"\0".equals(title))
+			this._title = title;		
+		else
+			System.out.println ("Field cannot be empty.");
 	}
 	
 	public String getTitle()
@@ -38,20 +40,20 @@ public class Game
 		return this._title;
 	}
 	
-	public final void setPlatform(String platform)
+	public final void setPlatform(Platforms platform)
 	{
-		if (!("\0".equals(platform)))
-			this._platform = platform;	
+		this._platform = platform;	
+		
 	}
 	
-	public String getPlatform()
+	public Platforms getPlatform()
 	{
 		return this._platform;
 	}
 	
 	public final void setSize(double size)
 	{
-		if (!("\0".equals(size)))
+		if (size > 0)
 			this._size = size;	
 	}
 	
@@ -64,10 +66,7 @@ public class Game
 	public String toString()
 	{
 	    StringBuilder info = new StringBuilder(100);
-	    return info.append("\nTitle:").append(this._title)
-	          .append("\nPlatform:").append(this._platform)
-	          .append("\nSize:").append(this._size)
-	          .toString();
+	    return info.append("\nTitle:").append(this._title).append("\nPlatform:").append(this._platform).append("\nSize:").append(this._size).toString();
 	}
 
 }
