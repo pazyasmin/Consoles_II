@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 import java.util.Random;
 
 public class Xbox360 extends Console implements IDevice, IXbox360
@@ -12,7 +13,8 @@ public Xbox360()
 	this._platform = Platforms.XBOX360;
 	this._kinect = false;
 	this._kinectCoordinates = new int [3];
-	this.setKinectCoordinates(0, 0, 0);
+	int[] vetor = {0, 0, 0};
+	this.setKinectCoordinates(vetor);
 }
 
 public Xbox360 (boolean power, String model, String manufacturer, Date releaseDate, boolean ethernetCard, 
@@ -23,7 +25,9 @@ public Xbox360 (boolean power, String model, String manufacturer, Date releaseDa
     	  platform, softwareVersion, internalStorage);
     this._kinect = false;
     this._kinectCoordinates = new int [3];
-    this.setKinectCoordinates(0, 0, 0);
+    int[] vetor = {0, 0, 0};
+	this.setKinectCoordinates(vetor);
+
 }
 
 public Xbox360(Xbox360 x)
@@ -47,20 +51,15 @@ public void motionSensing_ON()
 		
 	  	Scanner input = new Scanner(System.in);
 	  	String str = input.nextLine();
-	  	String yes = "Yes";
-	  	String no = "No"; 
-		input.close();
-		  if(str.equalsIgnoreCase(yes) || str.equalsIgnoreCase("Y")) 
+		  if(str.equalsIgnoreCase("y")|| str.equalsIgnoreCase("yes")) 
 		  {
 		      System.out.println("Connecting kinect device...");
 		      this.setKinect(true); 
 		      motionSensing_ON();
 		  } 
 		  else 
-			  if(str.equalsIgnoreCase(no) || str.equalsIgnoreCase("N"))
-			  {
-				  
-			 
+			  if(str.equalsIgnoreCase("no") || str.equalsIgnoreCase("n"))
+			  {	
 				System.out.println("Maybe next time.");
 		  		
 			  }
@@ -70,13 +69,8 @@ public void motionSensing_ON()
 	  {
 		  System.out.println("Your Xbox 360 is connected to a Kinect device. \nInitializing kinect....");
 		  System.out.println("Fetching position...\nMapping coordinates...");
-		  int[] randomInt = new int[3];
-		  Random rnd = new Random();
-		  for (int i = 0; i < 3; i++)
-		  {
-			  randomInt[i] = rnd.nextInt(100); 
-		  }
-		  this.setKinectCoordinates(randomInt[0], randomInt[1], randomInt[2]);	  
+		  
+		  this.setKinectCoordinates();	  
 		  
 		  System.out.println("X: "+ this.getKinectX() + ", Y: "+ this.getKinectY() +", Z: " + this.getKinectZ());
 	  }
@@ -141,13 +135,24 @@ public final void setKinect(boolean kinect)
  }
  
  @Override
- public final void setKinectCoordinates(int x, int y, int z)
+ public final void setKinectCoordinates(int[] vetor)
  {
-	 this._kinectCoordinates[0] = x;
-	 this._kinectCoordinates[0] = y;
-	 this._kinectCoordinates[0] = z;
+	 this._kinectCoordinates[0] = vetor[0];
+	 this._kinectCoordinates[0] = vetor[1];
+	 this._kinectCoordinates[0] = vetor[2];
  }
-
+ @Override
+ public final void setKinectCoordinates()
+ {
+ 	int[] vetor = {0,0,0};
+ 	 for (int i = 0; i < 3 ; i++)
+      {
+ 	      int Random = (int)(Math.random()*100);
+ 	      vetor[i]=(Random);
+      }
+ 	 this.setKinectCoordinates(vetor);
+ }
+ 
  @Override
  public int getKinectX()
  {
@@ -175,12 +180,12 @@ public void insertController()
 	  System.out.println("Would you like to insert a controller?<Y/N>");
 	  Scanner input = new Scanner(System.in);
 	  
-	  if(input.next().equalsIgnoreCase("y")||input.next().equalsIgnoreCase("yes")) 
+	  if(input.next().equalsIgnoreCase("y") || input.next().equalsIgnoreCase("yes")) 
 	  {
 		  
-	   	 if ( this._numControllers == s_maxControllers )
+	   	 if (this._numControllers >= s_maxControllers )
 	            System.out.println("\nAll controller ports are currently in use.");
-		 else
+	   	 else
 		 {
            Controller newController = new Controller();
            String [] buttons;
@@ -194,16 +199,17 @@ public void insertController()
            Scanner input2 = new Scanner(System.in);
            if(input2.next().equalsIgnoreCase("y")||input.next().equalsIgnoreCase("yes")) 
  		  	{	            
-           	newController.setWireless(true);
+        	   newController.setWireless(true);
  		  	}
-           else
-           	newController.setWireless(false);
+           	else
+           		newController.setWireless(false);
            
+            input.close();
  		  	input2.close();
            
  		  	this._controllers.add(newController);
  		  	this._numControllers++;
- 		  	System.out.println("Controller "+ this._controllers.size() + "found!");
+ 		  	System.out.println("Controller "+ this._controllers.size() + " found!");
 		 }
 	  }
 	  else 
@@ -216,9 +222,8 @@ public void insertController()
 @Override
 public void menu()
 {
-	int op = 0;
-  
-    do
+  int op = 0;
+	do
        {
     	   
            System.out.println("\n\n-Xbox 360-");
@@ -239,8 +244,11 @@ public void menu()
            System.out.println("13 - Display users.");
            System.out.println("14 - Turn off Xbox.");
            System.out.println("15 - Exit.");
-           Scanner scanner = new Scanner(System.in);
-           op = posNum(scanner);
+       		
+           String str = JOptionPane.showInputDialog(null,"Choose one of the options.\n", "Menu Xbox360", JOptionPane.INFORMATION_MESSAGE);
+
+       	 	op = Integer.parseInt( str.trim() );       
+       	
        		         
            switch(op)
            {
@@ -258,7 +266,7 @@ public void menu()
                }
                case 2:
                {
-                   insertController();
+                   this.insertController();
                    break;
                }
                case 3:
@@ -326,14 +334,11 @@ public void menu()
                }
                default:
                {
-                   if (op != 15)
-                   {
-                   	throw new IllegalArgumentException("\nInvalid option.\n");
-                   }
+            	   throw new IllegalArgumentException("\nInvalid option.\n");
                }
            }
-       }while(op != 15);
            
+       }while(op != 15);
        
 }
 
@@ -348,7 +353,8 @@ public void power_ON()
 	 	System.out.println("Scanning components...");    
 	 	System.out.println(this);
 	    motionSensing_ON();
-	    menu();
+	    this.menu();
+	
 	}
 	else
     {

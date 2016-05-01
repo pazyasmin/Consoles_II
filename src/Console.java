@@ -2,6 +2,9 @@
 * 
 */
 import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random;
@@ -434,32 +437,9 @@ public Game menuAvailableGames()
 	for (i = 0; i < this._numAvailableGames; i++)
 		System.out.println("Option " +(i+1) + " - "+ this._availableGames[i].getTitle());
 	
-	int usrInput=0;
-	boolean done = false;
-	while(!done)
-    {	 
-		  Scanner sc = new Scanner(System.in);
-		
-		  try
-		  {
-		    System.out.println("Please, enter one of the above options.");
-		    usrInput=sc.nextInt();
-		  }
-		  catch(InputMismatchException exception)
-		  {
-		    System.out.println("This is not an integer.");
-		  }
-		  
-		  if (usrInput < 0 || usrInput > 8)
-		  {
-			  System.out.println("This is not a valid option.");
-		  }
-		  else
-			  done = true;
-		  sc.close();
-    }
-	
-	return (this._availableGames[usrInput]);
+	String str = JOptionPane.showInputDialog(null,"Choose one of the options.\n", "Menu PlayStation 3", JOptionPane.INFORMATION_MESSAGE);;
+  	int op = Integer.parseInt(str.trim());       
+	return (this._availableGames[op]);
 
 }
 

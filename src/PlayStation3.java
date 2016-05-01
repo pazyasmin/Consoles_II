@@ -1,5 +1,7 @@
-import java.util.InputMismatchException;
+
 import java.util.Scanner;
+import java.util.Random;
+import javax.swing.JOptionPane;
 
 public class PlayStation3 extends Console implements IDevice, IPlayStation3
 {
@@ -11,8 +13,8 @@ public PlayStation3()
 	super();
 	this._platform = Platforms.PLAYSTATION3;
 	this._PSMove = false;
-	this._PSMoveCoordinates = new int [3];
-	this.setPSMoveCoordinates(0, 0, 0);
+    int[] vetor = {0, 0, 0};
+    this.setPSMoveCoordinates(vetor);
 }
 	
 public PlayStation3 (boolean power, String model, String manufacturer, Date releaseDate, boolean ethernetCard, 
@@ -23,7 +25,8 @@ public PlayStation3 (boolean power, String model, String manufacturer, Date rele
     		platform, softwareVersion, internalStorage);
     this._PSMove = psMove;
     this._PSMoveCoordinates = new int [3];
-    this.setPSMoveCoordinates(0, 0, 0);
+    int[] vetor = {0, 0, 0};
+    this.setPSMoveCoordinates(vetor);
 }
 	
 public PlayStation3(PlayStation3 p)
@@ -54,7 +57,7 @@ public void motionSensing_ON()
 		  {
 		      System.out.println("Connecting PlayStation Move device...");
 		      this.setPSMove(true); 
-		      this.motionSensing_ON();
+		      this.setPSMoveCoordinates();
 		  } 
 		  else
 			  if(str.equalsIgnoreCase(no) || str.equalsIgnoreCase("N")) 
@@ -129,6 +132,16 @@ public final void setPSMove(boolean psMove)
 		else
 			System.out.println("Your PS Move is already disconnected.");
 		 }
+}
+public final void setPSMoveCoordinates()
+{
+	int[] vector = {0,0,0};
+	 for (int i = 0; i < 3 ; i++)
+     {
+	      int Random = (int)(Math.random()*100);
+	      vector[i]=(Random);
+     }
+	 this.setPSMoveCoordinates(vector);
 }
   
  public final void setPSMoveCoordinates(int[] xyz)
@@ -207,7 +220,7 @@ public final void setPSMove(boolean psMove)
  @Override
  public void menu()
  {
-	int op1 = 0; 
+	int op = 0; 
     do
     {
     	
@@ -230,33 +243,11 @@ public final void setPSMove(boolean psMove)
         System.out.println("14 - Turn off PlayStation 3.");
         System.out.println("15 - Exit.");        
        
-        int usrInput=0;
-    	boolean done = false;
-    	while(!done)
-        {	 
-    		  Scanner sc = new Scanner(System.in);
-    		
-    		  try
-    		  {
-    		    System.out.println("Please, enter one of the above options.\n");
-    		    usrInput=sc.nextInt();
-    		  }
-    		  catch(InputMismatchException exception)
-    		  {
-    		    System.out.println("This is not an integer.");
-    		  }
-    		  
-    		  if (usrInput < 0 || usrInput > 16)
-    		  {
-    			  System.out.println("This is not a valid option.");
-    		  }
-    		  else
-    			  done = true;
-    		  
-    		  sc.close();
-        }	  
-        op1 = usrInput;
-        switch(op1)
+        String str = JOptionPane.showInputDialog(null,"Choose one of the options.\n", "Menu PlayStation 3", JOptionPane.INFORMATION_MESSAGE);;
+
+    	op = Integer.parseInt( str.trim() );       
+    	
+        switch(op)
         {
             case 0:
             {
@@ -340,13 +331,10 @@ public final void setPSMove(boolean psMove)
             
             default:
             {
-                if (op1 != 15)
-                {
-                	throw new IllegalArgumentException("\nInvalid option.\n");
-                }
+            	throw new IllegalArgumentException("\nInvalid option.\n");
             }
         }
-    }while(op1 != 15);
+    }while(op!= 15);
     
 
  }
@@ -361,15 +349,15 @@ public void power_ON()
 	 	System.out.println("Loading PlayStation 3. Please wait..."); 
 	 	System.out.println("Scanning components...");    
 	 	System.out.println(this);
-	   // motionSensing_ON();
+	    motionSensing_ON();
 	    menu();
 	}
 	else
 	{
 		System.out.println("Your PlayStation 3 is already turned on.\nRestarting..."); 
-      this._power = false;
-      power_ON();
-      System.out.println("Your PlayStation 3 has been restarted!\n");
+		this._power = false;
+		power_ON();
+		System.out.println("Your PlayStation 3 has been restarted!\n");
   }
 }
 
@@ -406,15 +394,5 @@ public String toString()
         return info.toString();
 }
 
-@Override
-public void setPSMoveCoordinates(int x, int y, int z) 
-{
- 
-	this._PSMoveCoordinates[0] = x;
-	this._PSMoveCoordinates[1] = y;
-	this._PSMoveCoordinates[2] = z;
-	
- 
-}
 
 }
