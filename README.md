@@ -1,2 +1,3 @@
 # Consoles_II
-2ª atividade de Programação 2: Adaptação do código da primeira atividade para Java.
+1o Assignment of my Object-Oriented Programming Class. 
+Adapting C++ code from 1st assignment to Java.
